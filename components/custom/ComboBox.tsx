@@ -21,11 +21,12 @@ import {
 
 interface ComboBoxProps {
   options: { label: string; value: string }[];
+  value?: string;
+  onChange: (value: string) => void;
 }
 
-export function Combobox({ options }: ComboBoxProps) {
+export function Combobox({ options, value, onChange }: ComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,8 +52,8 @@ export function Combobox({ options }: ComboBoxProps) {
                 <CommandItem
                   key={option.value}
                   value={option.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                  onSelect={() => {
+                    onChange(option.value === value ? "" : option.value);
                     setOpen(false);
                   }}>
                   <Check

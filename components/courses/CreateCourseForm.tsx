@@ -60,6 +60,7 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 mt-10">
+
           <FormField
             control={form.control}
             name="title"
@@ -67,7 +68,7 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Write the title here" {...field} />
+                  <Input placeholder="Write the title here (Figma Prototype or Development etc.)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -78,29 +79,37 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <Combobox options={categories} />
+                  <Combobox options={categories} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="subCategoryId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Subcategory</FormLabel>
+                <FormControl>
+                  <Combobox
+                    options={
+                      categories.find(
+                        (category) =>
+                          category.value === form.watch("categoryId"),
+                      )?.subCategories || []
+                    }
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="categoryId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input placeholder="Write the title here" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <Button type="submit">Submit</Button>
         </form>
       </Form>
