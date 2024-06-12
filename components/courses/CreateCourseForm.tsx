@@ -3,6 +3,7 @@ import { z } from "zod";
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/custom/ComboBox";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -38,6 +41,8 @@ interface CreateCourseFormProps {
 }
 
 const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,9 +52,17 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await axios.post("/api/courses", values);
+      router.push(`/instructor/courses/${response.data.id}/basic`);
+      toast.success("New Course created!");
+    } catch (err) {
+      console.log("Failed to create new course", err);
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <div className="p-10">
       <h1 className="text-xl font-bold">
@@ -60,7 +73,6 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 mt-10">
-
           <FormField
             control={form.control}
             name="title"
@@ -68,7 +80,10 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Write the title here (Figma Prototype or Development etc.)" {...field} />
+                  <Input
+                    placeholder="Write the title here (Figma Prototype or Development etc.)"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

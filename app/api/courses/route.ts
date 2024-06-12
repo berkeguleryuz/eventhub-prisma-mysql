@@ -20,6 +20,8 @@ export const POST = async (req: NextRequest) => {
         instructorId: userId,
       },
     });
+
+    return NextResponse.json(newCourse, { status: 200 });
   } catch (err) {
     console.log("[courses_POST]", err);
     return new NextResponse("Internal Server Error", { status: 500 });
