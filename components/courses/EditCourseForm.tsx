@@ -217,7 +217,7 @@ const EditCourseForm = ({
                 Cancel
               </Button>
             </Link>
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="bg-[#FDAB04] hover:bg-[#FDAB04]/80">Save</Button>
           </div>
         </form>
       </Form>
