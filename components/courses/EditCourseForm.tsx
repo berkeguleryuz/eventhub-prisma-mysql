@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Course } from "@prisma/client";
 import RichEditor from "@/components/custom/RichEditor";
 import { Combobox } from "../custom/ComboBox";
+import FileUpload from "../custom/FileUpload";
+import Link from "next/link";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -169,7 +171,54 @@ const EditCourseForm = ({
             />
           </div>
 
-          <Button type="submit">Submit</Button>
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Course Banner</FormLabel>
+                <FormControl>
+                  <FileUpload
+                    value={field.value || ""}
+                    onChange={(url) => field.onChange(url)}
+                    endpoint="courseBanner"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="29.99"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex gap-5">
+            <Link href={"/instructor/courses"}>
+              <Button
+                variant={"outline"}
+                type="button"
+                className="hover:bg-[#FDAB04]/10">
+                Cancel
+              </Button>
+            </Link>
+            <Button type="submit">Save</Button>
+          </div>
         </form>
       </Form>
     </div>
