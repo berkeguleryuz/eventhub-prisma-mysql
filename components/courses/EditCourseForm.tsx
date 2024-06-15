@@ -20,6 +20,9 @@ import RichEditor from "@/components/custom/RichEditor";
 import { Combobox } from "../custom/ComboBox";
 import FileUpload from "../custom/FileUpload";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -53,6 +56,8 @@ const EditCourseForm = ({
   categories,
   levels,
 }: EditCourseFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,9 +72,16 @@ const EditCourseForm = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await axios.patch(`/api/courses/${course.id}`, values);
+      toast.success("Course updated!");
+      router.refresh();
+    } catch (err) {
+      console.log("Failed to update new course", err);
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <div className="">
@@ -217,7 +229,11 @@ const EditCourseForm = ({
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" className="bg-[#FDAB04] hover:bg-[#FDAB04]/80">Save</Button>
+            <Button
+              type="submit"
+              className="bg-[#FDAB04] hover:bg-[#FDAB04]/80">
+              Save
+            </Button>
           </div>
         </form>
       </Form>
