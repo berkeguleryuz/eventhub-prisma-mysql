@@ -21,8 +21,9 @@ import { Combobox } from "../custom/ComboBox";
 import FileUpload from "../custom/FileUpload";
 import Link from "next/link";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Trash } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -57,6 +58,7 @@ const EditCourseForm = ({
   levels,
 }: EditCourseFormProps) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,8 +85,37 @@ const EditCourseForm = ({
     }
   };
 
+  const routes = [
+    {
+      label: "Basic Information",
+      path: `/instructor/courses/${course.id}/basic`,
+    },
+    {
+      label: "Curriculum",
+      path: `/instructor/courses/${course.id}/sections`,
+    },
+  ];
+
   return (
     <div className="">
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between mb-7 mt-6">
+        <div className="flex gap-5">
+          {routes.map((route) => (
+            <Link key={route.label} href={route.path} className="flex gap-4">
+              <Button variant={pathname === route.path ? "default" : "outline"}>
+                {route.label}
+              </Button>
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex gap-4 items-start">
+          <Button variant={"outline"}>Publish</Button>
+          <Button>
+            <Trash className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField

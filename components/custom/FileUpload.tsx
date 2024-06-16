@@ -13,7 +13,7 @@ interface FileUploadProps {
 
 const FileUpload = ({ value, onChange, endpoint }: FileUploadProps) => {
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row max-md:flex-col gap-2">
       {value !== "" && (
         <Image
           src={value}
