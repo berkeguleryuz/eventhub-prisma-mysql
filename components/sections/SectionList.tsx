@@ -1,13 +1,12 @@
-"use client";
 import { Section } from "@prisma/client";
-import React, { useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { Grip } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Grip, Pencil } from "lucide-react";
 
 interface SectionListProps {
   items: Section[];
@@ -37,17 +36,19 @@ const SectionList = ({ items, onReorder, onEdit }: SectionListProps) => {
     const startIndex = Math.min(result.source.index, result.destination.index);
     const endIndex = Math.max(result.source.index, result.destination.index);
 
-    const updatedSections = items.splice(startIndex, endIndex + 1);
+    const updatedSections = items.slice(startIndex, endIndex + 1);
 
     setSections(items);
 
-    const bulkUpdateData = updatedSections.map((section, index) => ({
+    const bulkUpdateData = updatedSections.map((section) => ({
       id: section.id,
       position: items.findIndex((item) => item.id === section.id),
     }));
 
     onReorder(bulkUpdateData);
   };
+
+  if (!isMounted) return null;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -68,11 +69,17 @@ const SectionList = ({ items, onReorder, onEdit }: SectionListProps) => {
                   <div
                     {...provided.draggableProps}
                     ref={provided.innerRef}
-                    className="flex items-center bg-[#FFF8eb] rounded-lg text-sm font-medium p-3">
+                    className="flex items-center bg-[#FFF8EB] rounded-lg text-sm font-medium p-3">
                     <div {...provided.dragHandleProps}>
-                      <Grip className="w-4 h-4 cursor-pointer mr-4 hover:text-[#FDAB04]" />
+                      <Grip className="h-4 w-4 cursor-pointer mr-4 hover:text-[#FDAB04]" />
                     </div>
                     {section.title}
+                    <div className="ml-auto">
+                      <Pencil
+                        className="h-4 w-4 cursor-pointer hover:text-[#FDAB04]"
+                        onClick={() => onEdit(section.id)}
+                      />
+                    </div>
                   </div>
                 )}
               </Draggable>
