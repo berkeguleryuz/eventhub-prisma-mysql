@@ -225,6 +225,7 @@ const EditCourseForm = ({
                     value={field.value || ""}
                     onChange={(url) => field.onChange(url)}
                     endpoint="courseBanner"
+                    page="Edit Course"
                   />
                 </FormControl>
                 <FormMessage />

@@ -17,6 +17,12 @@ export const ourFileRouter = {
   })
     .middleware(handleAuth)
     .onUploadComplete(() => {}),
+  sectionVideo: f({ video: { maxFileSize: "256MB", maxFileCount: 1 } })
+    .middleware(handleAuth)
+    .onUploadComplete(() => {}),
+  sectionResource: f(["text", "image", "video", "audio", "pdf"])
+    .middleware(handleAuth)
+    .onUploadComplete(() => {}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
