@@ -24,6 +24,7 @@ import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
+import Delete from "../custom/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -111,9 +112,7 @@ const EditCourseForm = ({
 
         <div className="flex gap-4 items-start">
           <Button variant={"outline"}>Publish</Button>
-          <Button>
-            <Trash className="w-4 h-4" />
-          </Button>
+          <Delete item="course" courseId={course.id} />
         </div>
       </div>
       <Form {...form}>

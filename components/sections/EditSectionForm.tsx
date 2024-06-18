@@ -7,7 +7,8 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { ArrowLeft, Trash } from "lucide-react";
+import { ArrowLeft, Loader2, Trash } from "lucide-react";
+import MuxPlayer from "@mux/mux-player-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,8 @@ import { Input } from "@/components/ui/input";
 import { MuxData, Resource, Section } from "@prisma/client";
 import RichEditor from "@/components/custom/RichEditor";
 import FileUpload from "@/components/custom/FileUpload";
-import ResourceForm from "./ResourceForm";
+import ResourceForm from "@/components/sections/ResourceForm";
+import Delete from "@/components/custom/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -58,13 +60,18 @@ const EditSectionForm = ({
     },
   });
 
+  const { isValid, isSubmitting } = form.formState;
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated!");
+      await axios.post(
+        `/api/courses/${courseId}/sections/${section.id}`,
+        values,
+      );
+      toast.success("Section updated!");
       router.refresh();
     } catch (err) {
-      console.log("Failed to update new course", err);
+      console.log("Failed to update new section", err);
       toast.error("Something went wrong!");
     }
   };
@@ -83,9 +90,7 @@ const EditSectionForm = ({
 
         <div className="flex gap-4 items-start">
           <Button variant={"outline"}>Publish</Button>
-          <Button>
-            <Trash className="w-4 h-4" />
-          </Button>
+          <Delete item="section" courseId={courseId} sectionId={section.id} />
         </div>
       </div>
 
@@ -103,7 +108,9 @@ const EditSectionForm = ({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>
+                  Title <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Introduction" {...field} />
                 </FormControl>
@@ -117,7 +124,7 @@ const EditSectionForm = ({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Description <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <RichEditor
                     placeholder="What is this section about?"
@@ -129,12 +136,21 @@ const EditSectionForm = ({
             )}
           />
 
+          {section.videoUrl && (
+            <div className="my-5">
+              <MuxPlayer
+                playbackId={section.muxData?.playbackId || ""}
+                className="md:max-w-[600px]"
+              />
+            </div>
+          )}
+
           <FormField
             control={form.control}
             name="videoUrl"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Video</FormLabel>
+                <FormLabel>Video <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <FileUpload
                     value={field.value || ""}
@@ -143,7 +159,7 @@ const EditSectionForm = ({
                     page="Edit Section"
                   />
                 </FormControl>
-                <FormMessage /> 
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -180,8 +196,13 @@ const EditSectionForm = ({
             </Link>
             <Button
               type="submit"
-              className="bg-[#FDAB04] hover:bg-[#FDAB04]/80">
-              Save
+              className="bg-[#FDAB04] hover:bg-[#FDAB04]/80"
+              disabled={!isValid || isSubmitting}>
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Save"
+              )}
             </Button>
           </div>
         </form>

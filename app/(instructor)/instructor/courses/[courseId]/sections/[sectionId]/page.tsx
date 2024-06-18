@@ -41,7 +41,12 @@ const SectionDetailsPage = async ({
     return redirect(`/instructor/courses/${params.courseId}/sections`);
   }
 
-  const isCompleted = false;
+  const requiredFields = [section.title, section.description, section.videoUrl];
+
+  const totalFields = requiredFields.length;
+  const missingField = requiredFields.filter((field) => !Boolean(field));
+  const missingFieldCount = missingField.length;
+  const isCompleted = requiredFields.every(Boolean);
 
   return (
     <div className="px-10">
