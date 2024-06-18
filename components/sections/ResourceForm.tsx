@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { File, PlusIcon } from "lucide-react";
+import { File, PlusIcon, X } from "lucide-react";
 import FileUpload from "@/components/custom/FileUpload";
 
 const formSchema = z.object({
@@ -81,11 +81,14 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
           <div
             key={resource.id}
             className="flex justify-between bg-[#FFF8EB] rounded-lg text-sm font-medium p-3">
-            <div className="flex items-center">
+            <div className="flex flex-row items-center">
               <File className="w-4 h-4 mr-4" />
-              {resource.name}
+              {resource.name} 
+              <p className="ml-1 hidden md:flex">⌁ {resource.fileUrl}</p>
             </div>
-            <div className="text-[#FDAB04]"></div>
+            <button className="text-[#FDAB04]">
+              <X className="h-4 w-4" />
+            </button>
           </div>
         ))}
         <Form {...form}>
