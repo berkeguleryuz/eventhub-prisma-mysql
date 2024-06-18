@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { File, PlusIcon, X } from "lucide-react";
+import { File, Loader2, PlusIcon, X } from "lucide-react";
 import FileUpload from "@/components/custom/FileUpload";
 
 const formSchema = z.object({
@@ -50,6 +50,8 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
     },
   });
 
+  const { isValid, isSubmitting } = form.formState;
+
   // 2. Define your submit function.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -63,6 +65,20 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
     } catch (err) {
       toast.error("Something went wrong!");
       console.log("Failed to upload resource", err);
+    }
+  };
+
+  const onDelete = async (id: string) => {
+    try {
+      await axios.post(
+        `/api/courses/${courseId}/sections/${section.id}/resources/${id}`,
+      );
+      toast.success("Resource deleted!!");
+      form.reset();
+      router.refresh();
+    } catch (err) {
+      toast.error("Something went wrong!");
+      console.log("Failed to delete resource", err);
     }
   };
 
@@ -83,11 +99,18 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
             className="flex justify-between bg-[#FFF8EB] rounded-lg text-sm font-medium p-3">
             <div className="flex flex-row items-center">
               <File className="w-4 h-4 mr-4" />
-              {resource.name} 
+              {resource.name}
               <p className="ml-1 hidden md:flex">⌁ {resource.fileUrl}</p>
             </div>
-            <button className="text-[#FDAB04]">
-              <X className="h-4 w-4" />
+            <button
+              className="text-[#FDAB04]"
+              disabled={isSubmitting}
+              onClick={() => onDelete(resource.id)}>
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <X className="h-4 w-4" />
+              )}
             </button>
           </div>
         ))}
@@ -127,7 +150,13 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Upload</Button>
+            <Button type="submit" disabled={!isValid || isSubmitting}>
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Upload"
+              )}
+            </Button>
           </form>
         </Form>
       </div>
