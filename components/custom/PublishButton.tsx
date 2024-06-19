@@ -33,6 +33,8 @@ const PublishButton = ({
       isPublished
         ? await axios.post(`${url}/unpublish`)
         : axios.post(`${url}/publish`);
+
+      toast.success(`${page} ${isPublished ? "unpublished" : "published"}`);
     } catch (err) {
       toast.error("Something went wrong!");
       console.log(
