@@ -27,6 +27,7 @@ import RichEditor from "@/components/custom/RichEditor";
 import FileUpload from "@/components/custom/FileUpload";
 import ResourceForm from "@/components/sections/ResourceForm";
 import Delete from "@/components/custom/Delete";
+import PublishButton from "@/components/custom/PublishButton";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -89,7 +90,13 @@ const EditSectionForm = ({
         </Link>
 
         <div className="flex gap-4 items-start">
-          <Button variant={"outline"}>Publish</Button>
+          <PublishButton
+            disabled={!isCompleted}
+            courseId={courseId}
+            sectionId={section.id}
+            isPublished={section.isPublished}
+            page="Section"
+          />
           <Delete item="section" courseId={courseId} sectionId={section.id} />
         </div>
       </div>
@@ -124,7 +131,9 @@ const EditSectionForm = ({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Description <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <RichEditor
                     placeholder="What is this section about?"
@@ -150,7 +159,9 @@ const EditSectionForm = ({
             name="videoUrl"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Video <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Video <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <FileUpload
                     value={field.value || ""}
