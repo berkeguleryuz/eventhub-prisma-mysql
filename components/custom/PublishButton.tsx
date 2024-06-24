@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 interface PublishButtonProps {
   disabled: boolean;
   courseId: string;
-  sectionId: string;
+  sectionId?: string;
   isPublished: boolean;
   page: string;
 }
@@ -35,7 +35,7 @@ const PublishButton = ({
       setIsLoading(true);
       isPublished
         ? await axios.post(`${url}/unpublish`)
-        : axios.post(`${url}/publish`);
+        : await axios.post(`${url}/publish`);
 
       toast.success(`${page} ${isPublished ? "unpublished" : "published"}`);
       router.refresh();
@@ -54,7 +54,13 @@ const PublishButton = ({
       variant={"outline"}
       disabled={disabled || isLoading}
       onClick={onClick}>
-      {isLoading ? <Loader2 /> : isPublished ? "Unpublish" : "Publish"}
+      {isLoading ? (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      ) : isPublished ? (
+        "Unpublish"
+      ) : (
+        "Publish"
+      )}
     </Button>
   );
 };

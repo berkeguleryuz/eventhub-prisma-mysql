@@ -25,6 +25,7 @@ import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
 import Delete from "../custom/Delete";
+import PublishButton from "../custom/PublishButton";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -51,12 +52,14 @@ interface EditCourseFormProps {
     subCategories: { label: string; value: string }[];
   }[];
   levels: { label: string; value: string }[];
+  isCompleted: boolean;
 }
 
 const EditCourseForm = ({
   course,
   categories,
   levels,
+  isCompleted,
 }: EditCourseFormProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -111,7 +114,12 @@ const EditCourseForm = ({
         </div>
 
         <div className="flex gap-4 items-start">
-          <Button variant={"outline"}>Publish</Button>
+          <PublishButton
+            disabled={!isCompleted}
+            courseId={course.id}
+            isPublished={course.isPublished}
+            page="Course"
+          />
           <Delete item="course" courseId={course.id} />
         </div>
       </div>
@@ -122,7 +130,9 @@ const EditCourseForm = ({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>
+                  Title <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Write a title" {...field} />
                 </FormControl>
@@ -150,7 +160,9 @@ const EditCourseForm = ({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  Description <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <RichEditor
                     placeholder="What is this course about?"
@@ -168,7 +180,9 @@ const EditCourseForm = ({
               name="categoryId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>
+                    Category <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Combobox options={categories} {...field} />
                   </FormControl>
@@ -181,7 +195,9 @@ const EditCourseForm = ({
               name="subCategoryId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Subcategory</FormLabel>
+                  <FormLabel>
+                    Subcategory <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Combobox
                       options={
@@ -203,7 +219,9 @@ const EditCourseForm = ({
               name="levelId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Level</FormLabel>
+                  <FormLabel>
+                    Level <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Combobox options={levels} {...field} />
                   </FormControl>
@@ -218,7 +236,9 @@ const EditCourseForm = ({
             name="imageUrl"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Course Banner</FormLabel>
+                <FormLabel>
+                  Course Banner <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <FileUpload
                     value={field.value || ""}
@@ -237,7 +257,9 @@ const EditCourseForm = ({
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>
+                  Price <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
