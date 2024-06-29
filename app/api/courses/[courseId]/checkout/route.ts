@@ -7,7 +7,7 @@ import { stripe } from "@/lib/stripe";
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { courseId: string } }
+  { params }: { params: { courseId: string } },
 ) => {
   try {
     const user = await currentUser();
@@ -44,8 +44,8 @@ export const POST = async (
           },
           unit_amount: Math.round(course.price! * 100),
         },
-      }
-    ]
+      },
+    ];
 
     let stripeCustomer = await db.stripeCustomer.findUnique({
       where: { customerId: user.id },
@@ -75,10 +75,10 @@ export const POST = async (
       metadata: {
         courseId: course.id,
         customerId: user.id,
-      }
+      },
     });
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: session.url });
   } catch (err) {
     console.log("[courseId_checkout_POST]", err);
     return new NextResponse("Internal Server Error", { status: 500 });
