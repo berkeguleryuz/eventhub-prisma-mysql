@@ -1,8 +1,9 @@
+import Stripe from "stripe";
+import { NextRequest, NextResponse } from "next/server";
+import { currentUser } from "@clerk/nextjs/server";
+
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { currentUser } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 
 export const POST = async (
   req: NextRequest,
@@ -30,14 +31,14 @@ export const POST = async (
     });
 
     if (purchase) {
-      return new NextResponse("Course already purchased", { status: 400 });
+      return new NextResponse("Course Already Purchased", { status: 400 });
     }
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
       {
         quantity: 1,
         price_data: {
-          currency: "eur",
+          currency: "cad",
           product_data: {
             name: course.title,
           },
@@ -61,7 +62,6 @@ export const POST = async (
           customerId: user.id,
           stripeCustomerId: customer.id,
         },
-        select: { stripeCustomerId: true },
       });
     }
 
@@ -80,7 +80,7 @@ export const POST = async (
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.log("courseID_checkout_POST", err);
+    console.log("[courseId_checkout_POST]", err);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

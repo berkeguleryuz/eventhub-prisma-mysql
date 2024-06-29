@@ -36,7 +36,7 @@ export const POST = async (req: NextRequest) => {
       },
     });
   } else {
-    return new NextResponse(`Unhandled event type ${event.type}`, {
+    return new NextResponse(`Unhandled event type: ${event.type}`, {
       status: 400,
     });
   }
