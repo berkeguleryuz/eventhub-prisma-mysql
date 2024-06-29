@@ -1,11 +1,8 @@
 import SectionsDetails from "@/components/sections/SectionsDetails";
-import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Resource } from "@prisma/client";
-import { Section } from "lucide-react";
 import { redirect } from "next/navigation";
-import React from "react";
 
 const SectionDetailsPage = async ({
   params,
@@ -85,6 +82,7 @@ const SectionDetailsPage = async ({
       },
     },
   });
+
   return (
     <SectionsDetails
       course={course}
