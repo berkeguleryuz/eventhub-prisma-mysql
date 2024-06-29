@@ -6,7 +6,7 @@ import ToasterProvider from "@/components/providers/ToasterProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Education BA",
+  title: "Clodron Web Purchases",
   description: "Educational Process, Shape the Future!",
 };
 
