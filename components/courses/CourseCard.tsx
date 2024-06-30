@@ -30,8 +30,8 @@ const CourseCard = async ({ course }: { course: Course }) => {
         className="rounded-t-xl w-[320px] h-[180px] object-cover"
       />
       <div className="px-4 py-3 flex flex-col gap-2">
-        <h2 className="text-lg font-bold hover:text-[#FDAB04]">
-          {course.title}
+        <h2 className="text-lg font-bold hover:text-[#FDAB04] ">
+          {course.title.substring(0, 30)}
         </h2>
         <div className="flex justify-between text-sm font-medium">
           {instructor && (
