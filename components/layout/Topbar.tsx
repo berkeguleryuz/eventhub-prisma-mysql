@@ -79,7 +79,11 @@ const Topbar = () => {
             <SheetTrigger className="items-center text-center flex">
               <Menu className="w-5 h-5" />
             </SheetTrigger>
+
             <SheetContent className="flex flex-col gap-4">
+              <Link href={"/"}>
+                <Image src={"/logo.png"} alt="logo" width={100} height={100} />
+              </Link>
               <div className="flex flex-col gap-4">
                 {topRoutes.map((route) => (
                   <SheetClose key={route.path} asChild>

@@ -3,6 +3,7 @@ import React from "react";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 const SectionMenu = ({
   course,
@@ -16,6 +17,9 @@ const SectionMenu = ({
           Sections
         </SheetTrigger>
         <SheetContent className="flex flex-col">
+          <Link href={"/"}>
+            <Image src={"/logo.png"} alt="logo" width={100} height={100} />
+          </Link>
           <SheetClose asChild>
             <Link
               href={`/courses/${course.id}/overview`}
