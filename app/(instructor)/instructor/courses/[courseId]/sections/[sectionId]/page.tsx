@@ -10,6 +10,7 @@ const SectionDetailsPage = async ({
 }: {
   params: { courseId: string; sectionId: string };
 }) => {
+  const { courseId, sectionId } = params;
   const { userId } = auth();
 
   if (!userId) {
@@ -18,8 +19,16 @@ const SectionDetailsPage = async ({
 
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
+      id: courseId,
       instructorId: userId,
+      isPublished: true,
+    },
+    include: {
+      sections: {
+        where: {
+          isPublished: true,
+        },
+      },
     },
   });
 
@@ -56,7 +65,7 @@ const SectionDetailsPage = async ({
         requiredFieldsCount={requiredFieldsCount}
         missingFieldsCount={missingFieldsCount}
       />
-      
+
       <EditSectionForm
         section={section}
         courseId={params.courseId}

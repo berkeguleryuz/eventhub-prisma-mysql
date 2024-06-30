@@ -19,7 +19,6 @@ export const POST = async (
     const course = await db.course.findUnique({
       where: {
         id: courseId,
-        instructorId: userId,
       },
     });
 
@@ -38,26 +37,40 @@ export const POST = async (
       return new NextResponse("Section Not Found", { status: 404 });
     }
 
-    const progress = await db.progress.upsert({
+    let progress = await db.progress.findUnique({
       where: {
         studentId_sectionId: {
           studentId: userId,
           sectionId,
         },
       },
-      update: {
-        isCompleted,
-      },
-      create: {
-        studentId: userId,
-        sectionId,
-        isCompleted,
-      },
     });
+
+    if (progress) {
+      progress = await db.progress.update({
+        where: {
+          studentId_sectionId: {
+            studentId: userId,
+            sectionId,
+          },
+        },
+        data: {
+          isCompleted,
+        },
+      });
+    } else {
+      progress = await db.progress.create({
+        data: {
+          studentId: userId,
+          sectionId,
+          isCompleted,
+        },
+      });
+    }
 
     return NextResponse.json(progress, { status: 200 });
   } catch (err) {
-    console.log("[sectionId_Progress_POST", err);
+    console.log("[sectionId_progress_POST]", err);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
